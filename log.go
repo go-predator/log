@@ -226,9 +226,18 @@ func (log Logger) Out() io.Writer {
 // IsDebug determines whether the current environment is `DEBUG` through
 // the `DEBUG` variable in the current environment variables.
 func IsDebug() bool {
-	return os.Getenv("DEBUG") != "" &&
-		os.Getenv("DEBUG") != "0" &&
-		strings.ToLower(os.Getenv("DEBUG")) != "false"
+	debug := os.Getenv("DEBUG")
+
+	if debug == "1" || strings.ToLower(debug) == "true" {
+		return true
+	}
+
+	if debug == "0" && strings.ToLower(debug) == "false" {
+		return false
+	}
+
+	// NOTE: default is false
+	return false
 }
 
 // NewLogger returns a new `Logger` pointer.
