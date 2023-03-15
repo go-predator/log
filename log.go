@@ -1,3 +1,12 @@
+/**
+ * @Author:      thepoy
+ * @Email:       thepoy@163.com
+ * @File Name:   log.go
+ * @Created At:  2023-03-15 16:00:44
+ * @Modified At: 2023-03-15 16:01:30
+ * @Modified By: thepoy
+ */
+
 /*
  * @Author:    thepoy
  * @Email:     thepoy@163.com
@@ -53,6 +62,10 @@ type Logger struct {
 type Arg struct {
 	Key   string
 	Value any
+}
+
+func NewArg(key string, val any) Arg {
+	return Arg{key, val}
 }
 
 func guessType(l *zerolog.Event, args ...Arg) *zerolog.Event {
