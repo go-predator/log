@@ -1,20 +1,3 @@
-/**
- * @Author:      thepoy
- * @Email:       thepoy@163.com
- * @File Name:   log.go
- * @Created At:  2023-03-15 16:00:44
- * @Modified At: 2023-03-15 16:01:30
- * @Modified By: thepoy
- */
-
-/*
- * @Author:    thepoy
- * @Email:     thepoy@163.com
- * @File Name: log.go
- * @Created:   2022-05-23 15:39:49
- * @Modified:  2022-05-23 15:40:19
- */
-
 package log
 
 import (
@@ -194,7 +177,6 @@ func validte(err any) error {
 
 // Error logs a `ERROR` message with some `Arg`s.
 func (log *Logger) Error(err any, args ...Arg) {
-
 	l := log.L.Error().Caller(log.skip).Err(validte(err))
 	l = guessType(l, args...)
 	l.Send()
@@ -239,13 +221,13 @@ func (log Logger) Out() io.Writer {
 // IsDebug determines whether the current environment is `DEBUG` through
 // the `DEBUG` variable in the current environment variables.
 func IsDebug() bool {
-	debug := os.Getenv("DEBUG")
+	debug := strings.ToLower(os.Getenv("DEBUG"))
 
-	if debug == "1" || strings.ToLower(debug) == "true" {
+	if debug == "1" || debug == "true" || debug == "yes" {
 		return true
 	}
 
-	if debug == "0" && strings.ToLower(debug) == "false" {
+	if debug == "0" || debug == "false" || debug == "no" {
 		return false
 	}
 
