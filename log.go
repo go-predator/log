@@ -13,11 +13,12 @@ import (
 )
 
 // Level defines the log level
-type Level uint8
+type Level int8
 
 // log level
 const (
-	DEBUG Level = iota
+	TRACE Level = iota - 1
+	DEBUG
 	INFO
 	WARNING
 	ERROR
@@ -233,6 +234,43 @@ func IsDebug() bool {
 
 	// NOTE: default is false
 	return false
+}
+
+// EnvLogLevel returns the logging level set in the LOG_LEVEL environment
+// variable. If LOG_LEVEL is not set, it defaults to log.WARNING.
+//
+// The mapping of LOG_LEVEL strings to log levels is:
+//
+//	-1, trace -> log.TRACE
+//	0, debug -> log.DEBUG
+//	1, info  -> log.INFO
+//	2, warning, warn -> log.WARNING
+//	3, error -> log.ERROR
+//	4, fatal -> log.FATAL
+//
+// LOG_LEVEL is case insensitive - "TRACE", "trace", and "Trace" all map to
+// log.TRACE.
+//
+// Other values default to log.WARNING.
+func EnvLogLevel() Level {
+	level := strings.ToLower(os.Getenv("LOG_LEVEL"))
+
+	switch level {
+	case "-1", "trace":
+		return TRACE
+	case "0", "debug":
+		return DEBUG
+	case "1", "info":
+		return INFO
+	case "2", "warning", "warn":
+		return WARNING
+	case "3", "error":
+		return ERROR
+	case "4", "fatal":
+		return FATAL
+	}
+
+	return WARNING
 }
 
 // NewLogger returns a new `Logger` pointer.
